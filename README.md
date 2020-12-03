@@ -1,3 +1,3 @@
 # README
 
-My python solutions for Advent of Code 2020.
+My python scripts for the [Advent of Code](https://adventofcode.com/) 2020.
