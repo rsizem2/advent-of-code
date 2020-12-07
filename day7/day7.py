@@ -1,5 +1,5 @@
 import re
-from collections import deque, defaultdict
+from collections import deque, defaultdict, Counter
 
 def parse_rules(string):
     first, temp = string.split(" bags contain ")
@@ -40,5 +40,16 @@ def puzzle1():
                 found.add(color)
     print(len(found))
 
-
-puzzle1()
+def puzzle2():
+    contains, bags = read_file()
+    contents = {key: Counter(value) for key, value in contains.items()}
+    def count(item, d):
+        temp = 0
+        print(item)
+        for bag, cnt in d[item].items():
+            temp += cnt + cnt*count(bag, d)
+        return temp
+    print(count('shiny gold', contents))
+        
+puzzle1()    
+puzzle2()
