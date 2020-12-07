@@ -1,4 +1,5 @@
 import re
+from collections import deque, defaultdict
 
 def parse_rules(string):
     first, temp = string.split(" bags contain ")
@@ -15,19 +16,29 @@ def parse_rules(string):
     return first, contents
 
 def read_file():
-    contains = {}
-    with open('testcase.txt') as file:
+    temp = {}
+    with open('input.txt') as file:
         for line in file:
             string = line.strip()
             color, contents = parse_rules(string)
-            contains[color] = contents
-    return contains, list(contains.keys())
+            temp[color] = contents
+    return  temp, list(temp.keys())
 
 def puzzle1():
-    rules, bags = read_file()
-    count = 0
-    can_contain = {}
-    for bag in bags:
-        if b
-    
+    contains, bags = read_file()
+    contained_in = defaultdict(set)
+    for container, contents in contains.items():
+        for color in contents:
+            contained_in[color].add(container)
+    found = set()
+    queue = deque(["shiny gold"])
+    while queue:
+        current = queue.popleft()
+        for color in contained_in[current]:
+            if color not in found:
+                queue.append(color)
+                found.add(color)
+    print(len(found))
+
+
 puzzle1()
