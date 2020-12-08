@@ -1,7 +1,7 @@
 
 def puzzle1():
     valid = 0
-    with open('day2.txt') as file:
+    with open('../input/day2_input.txt') as file:
         for line in file:
             x, letter, pw = line.split()
             min_val, max_val = map(int,x.split('-'))
@@ -13,7 +13,7 @@ def puzzle1():
 
 def puzzle2():
     valid = 0
-    with open('day2.txt') as file:
+    with open('../input/day2_input.txt') as file:
         for line in file:
             x, letter, pw = line.split()
             pos1, pos2 = map(int,x.split('-'))

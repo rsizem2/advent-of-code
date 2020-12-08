@@ -2,7 +2,7 @@
 FIELDS = set(['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'])
 
 def read_file():
-    with open('input.txt') as file:
+    with open('../input/day4_input.txt') as file:
         passport = {}
         passports = []
         for line in file:

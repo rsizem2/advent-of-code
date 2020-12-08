@@ -1,6 +1,6 @@
 
 def read_file():
-    with open('input.txt') as file:
+    with open('../input/day3_input.txt') as file:
         temp = [line.strip() for line in file]
     return temp
 

@@ -1,6 +1,6 @@
 
 def puzzle1():
-    with open('input.txt') as file:
+    with open('../input/day6_input.txt') as file:
         groups = []
         current_group = set()
         for line in file:
@@ -19,7 +19,7 @@ def puzzle1():
 
 
 def puzzle2():
-    with open('input.txt') as file:
+    with open('../input/day6_input.txt') as file:
         groups = []
         current_group = []
         for line in file:

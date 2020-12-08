@@ -1,7 +1,7 @@
 
 def read_file():
     temp = []
-    with open('input.txt') as file:
+    with open('../input/day8_input.txt') as file:
         temp = [tuple(line.strip().split()) for line in file]
         temp = [(x,int(y)) for x,y in temp]
     return temp
