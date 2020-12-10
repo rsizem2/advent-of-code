@@ -19,6 +19,17 @@ def puzzle1():
     
 def puzzle2():
     temp = read_file()
+    num_paths = [1 for x in temp]
+    for i, x in enumerate(temp):
+        paths = 0
+        if x <= 3:
+            paths = 1
+        j = i-1
+        while j >= 0 and x - 3 <= temp[j]:
+            paths += num_paths[j]
+            j -= 1
+        num_paths[i] = paths
+    print(num_paths[-1])
 
 puzzle1()
 puzzle2()
