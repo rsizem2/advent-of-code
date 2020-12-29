@@ -36,32 +36,24 @@ def do_moves_list(cups, num_moves, verbose = False):
 def initiate_linkedlist(cups, num_cups):
     temp = [(x+1) % num_cups for x in range(num_cups)]
     if num_cups == len(cups):
-        print("No extra cups.")
         final = int(cups[0]) - 1
     else:
         final = len(cups)
     cups = deque(map(lambda x: int(x)-1, list(cups)))
-    print(list(x+1 for x in cups))
     old = -1
     while cups:
         current = cups.popleft()
         temp[old] = current
         old = current
-    print(old, "->" , final)
     temp[old] = final
     return temp
     
     
 def do_moves_linked(cups, num_moves, num_cups, verbose = False):
     temp = initiate_linkedlist(cups, num_cups)
-    print(len(temp))
     current = temp[-1]
     for move in range(1, num_moves+1):
-        try:
-            pickup = [temp[current]]
-        except:
-            print(current)
-            return
+        pickup = [temp[current]]
         for _ in range(2):
             pickup.append(temp[pickup[-1]])
         final = temp[pickup[-1]]
