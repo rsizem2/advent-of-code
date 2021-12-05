@@ -2,9 +2,9 @@
 
 def read_file(test = True):
     if test:
-        filename = '..\input\day3_test.txt'
+        filename = '../tests/day3.txt'
     else:
-        filename = '..\input\day3_input.txt'
+        filename = '../input/day3.txt'
     with open(filename) as file:
         temp = [line.strip() for line in file]
     return temp
@@ -34,17 +34,13 @@ def puzzle2(test = True):
     while len(temp) > 1:
         count = 0
         for line in temp:
-            print(line)
             if line[pos] == '1':
                 count += 1
-        print(count, len(temp))
         if count >= len(temp) / 2:
             temp = [x for x in temp if x[pos] == '1']
         else:
             temp = [x for x in temp if x[pos] == '0']
         pos += 1
-        print(temp)
-    print(temp[0])
     oxygen = int(temp[0],2)
     
     temp = read_file(test)
@@ -52,7 +48,6 @@ def puzzle2(test = True):
     while len(temp) > 1:
         count = 0
         for line in temp:
-            print(line)
             if line[pos] == '1':
                 count += 1
         
@@ -61,11 +56,8 @@ def puzzle2(test = True):
         else:
             temp = [x for x in temp if x[pos] == '1']
         pos += 1
-        print(temp)
-    print(temp[0])
     c02 = int(temp[0],2)
-    
     print(oxygen*c02)
 
-puzzle1()
+puzzle1(False)
 puzzle2(False)

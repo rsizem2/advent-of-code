@@ -2,10 +2,10 @@ from collections import deque
 
 
 def read_file(test = True):
-    filename = '..\input\day1_input.txt'
-    
     if test:
-        filename = '..\input\day1_test.txt'
+        filename = '../tests/day1.txt'
+    else:
+        filename = '../input/day1.txt'
         
     with open(filename) as file:
         temp = [int(line.strip()) for line in file]

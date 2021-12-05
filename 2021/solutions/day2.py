@@ -2,9 +2,9 @@
 
 def read_file(test = True):
     if test:
-        filename = '..\input\day2_test.txt'
+        filename = '../tests/day2.txt'
     else:
-        filename = '..\input\day2_input.txt'
+        filename = '../input/day2.txt'
     with open(filename) as file:
         temp = [line.strip().split() for line in file]
     return temp

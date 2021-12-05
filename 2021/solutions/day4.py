@@ -2,9 +2,9 @@ import numpy as np
 
 def read_file(test = True):
     if test:
-        filename = '..\input\day4_test.txt'
+        filename = '../input/day4.txt'
     else:
-        filename = '..\input\day4_input.txt'
+        filename = '../input/day4.txt'
         
     boards = list()
     temp = list()
