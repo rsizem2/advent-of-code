@@ -31,40 +31,92 @@ convert = {
     'F' : '1111',
     }
 
-def parse(packet):
-    version = int(packet[:3], 2)
-    type_id = int(packet[3:6],2)
-    print(version, type_id)
-    index = 6
-    if type_id == 4:
-        literal = list()
-        while packet[index] == '1':
-            literal.append(packet[index+1:index+5])
-            index += 5
-        literal.append(packet[index+1:index+5])
-        literal = int(''.join(literal), 2)
-        while index % 4 != 2:
-            index += 1
-        print(literal)
-        print(packet[index:])
-        if packet[index:]:
-            parse(packet[index:])
-        else:
-            return
-    else:
-        if packet[index] == '0':
-            length = int(packet[index+1,index+16], 2)
-        elif packet[index] == '1':
-            num_packets = int(packet[index+1,index+12], 2)
-        else:
-            assert False
+def pop(queue, n):
+    temp = list()
+    for i in range(n):
+        temp.append(queue.popleft())
+    return ''.join(temp), queue
+
+def parse1(packet, count):
+    
+    if not packet:
+        return count, packet
+    
+    try:
+        current = list()
+        
+        # Version number
+        version, packet = pop(packet, 3)
+        current.extend(list(version))
+        version = int(version,2)
+        count += version
+        
+        # Type ID
+        type_id, packet = pop(packet, 3)
+        current.extend(list(type_id))
+        type_id = int(type_id,2)
+        print(count)
+        
+        # Parse literal
+        if type_id == 4:
+            temp, packet = pop(packet, 1)
+            current.append(temp)
+            literal = list()
+            # read while indicator bit = 1
+            while temp == '1':
+                temp, packet = pop(packet, 4)
+                current.extend(list(temp))
+                literal.append(temp)
+                temp, packet = pop(packet, 1)
+                current.extend(list(temp))
+            temp, packet = pop(packet, 4)
+            current.extend(list(temp))
+            literal.append(temp)
+            literal = int(''.join(literal), 2)
+            # Find extraneous 0's
+            while len(current) % 4 and packet:
+                temp, packet = pop(packet, 1)
+                current.extend(list(temp))
+                assert temp == '0'
+            print(literal)
+            if packet:
+                return parse1(packet, count)
+            return packet, count
+        temp, packet = pop(packet, 1)
+        current.extend(list(temp))
+        if temp == '0':
+            # find length of subpackets
+            temp, packet = pop(packet, 15)
+            current.extend(list(temp))
+            total_bits = int(temp,2)
+            # Parse subpackets
+            temp, packet = pop(packet, total_bits)
+            current.extend(list(temp))
+            new = deque(temp)
+            _, count = parse1(new, count)
+            if packet:
+                return parse1(packet, count)
+            return packet, count
+        elif temp == '1':
+            # find number of subpackets
+            temp, packet = pop(packet, 11)
+            current.extend(list(temp))
+            total_packets = int(temp,2)
+            for i in range(total_packets):
+                packet, count = parse1(packet, count)
+            if packet:
+                return parse1(packet, count)
+            return packet, count
+    except:
+        return deque(), count
+                
 
 def puzzle1(test = True):
-    temp = read_file(test)
-    temp = ''.join(list(map(lambda x: convert[x], temp)))
-    print(temp)
-    parse(temp)
-                
+    temp = ''.join(list(map(lambda x: convert[x], read_file(test))))
+    temp = deque(temp)
+    _, count = parse1(temp, 0)
+    print(count)
+
 
 def puzzle2(test = True):
     temp = read_file(test)
