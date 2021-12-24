@@ -20,8 +20,8 @@ def search(start, dest):
         print(cost, node)
         if node == dest:
             return costs[dest]
-        if node in visited:
-            # removed node popped
+        if node in visited or costs[node] < cost:
+            # removed node or obsolete priority
             continue
         visited.add(node)
         possible_moves = get_moves(node)
@@ -38,17 +38,21 @@ def valid_move(state, start, end):
     if not reachable(state, start, end):
         return False
     # start at a room
-    if is_room(state, start):
-        char = pop_room(state, start)[1]
-    elif state[start] == '.':
+    if state[start] == '.':
         return False
+    elif is_room(state, start):
+        room = True
+        char = pop_room(state, start)[1]
     else:
+        room = False
         char = state[start]
     # end at a room
     if is_room(state, end):
         return room_ready(state, end) and end == goals[char]
-    else:
-        return state[end] == '.'
+    elif room:
+        return True
+    else: 
+        return False
      
 def get_moves(state):
     moves = list()
@@ -70,8 +74,10 @@ def move(state, start, end):
     new_state = list(state)
     # starting position is a room
     if len(state[start]) > 1:
-        dist, char, new_room = pop_room(state, start)
-        new_state[start] = new_room
+        x = pop_room(state, start)
+        if x:
+            dist, char, new_room = x
+            new_state[start] = new_room
     else:
         char = state[start]
         assert char != '.', f'moving from {start} to {end} in {state}'
@@ -85,7 +91,7 @@ def move(state, start, end):
     else:
         new_state[end] = char
         dist += abs(start - end)
-    return dist, tuple(new_state)
+    return dist*move_costs[char], tuple(new_state)
         
 
 def reachable(state, start, end):
@@ -131,6 +137,7 @@ def pop_room(state, pos):
 
 def push_room(state, pos, char):
     assert goals[char] == pos
+    assert room_ready(state, pos)
     room = list(state[pos])
     cost = 0
     for i,x in room:
