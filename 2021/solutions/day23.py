@@ -20,11 +20,12 @@ def search(start, dest):
         print(cost, node)
         if node == dest:
             return costs[dest]
-        if node in visited or costs[node] < cost:
+        if node in visited:
             # removed node popped
             continue
         visited.add(node)
         possible_moves = get_moves(node)
+        #break
         for added_cost, state in possible_moves:
             if state in visited:
                 continue
@@ -50,7 +51,6 @@ def valid_move(state, start, end):
         return state[end] == '.'
      
 def get_moves(state):
-    print('Getting Moves:', state)
     moves = list()
     for start, x in enumerate(state):
         for end, y in enumerate(state):
@@ -61,6 +61,7 @@ def get_moves(state):
             else:
                 cost, new_state = move(state, start, end)
                 moves.append((cost, new_state))
+                print(cost, new_state)
     return moves
 
 def move(state, start, end):
@@ -117,13 +118,16 @@ def pop_room(state, pos):
     if len(state[pos]) == 1:
         return 0, state[pos], '.'
     assert not room_complete(state, pos)
-    assert not all(x == '.' for x in state[pos])
     room = list(state[pos])
-    for i,x in enumerate(room, start = 1):
+    if all(x == '.' for x in state[pos]):
+        return 0, '.', ''.join(room)
+    cost = 1
+    for i,x in enumerate(room):
         if x != '.':
+            cost += 1
             room[i] = '.'
-            return i, x, ''.join(room) 
-    return 0, '.', ''.join(room)
+            return cost, x, ''.join(room) 
+    assert False 
 
 def push_room(state, pos, char):
     assert goals[char] == pos
