@@ -12,7 +12,7 @@ def read_file(test = True):
             temp[line[-1]] = line[:-2]
     return temp
 
-def evaluate(component, connections, values):
+def eval_circuit(component, connections, values):
     try:
         # 'component' is a constant signal, no need to check inputs
         val = int(component)
@@ -27,7 +27,7 @@ def evaluate(component, connections, values):
             values[component] = int(command[0])
         except ValueError:
             # input is another wire
-            evaluate(command[0], connections, values)
+            eval_circuit(command[0], connections, values)
             values[component] = values[command[0]]
     elif len(command) == 2:
         # bitwise NOT of source
@@ -36,15 +36,15 @@ def evaluate(component, connections, values):
             raise ValueError
         if source not in values:
             # source has no signal yet
-            evaluate(source, connections, values)
+            eval_circuit(source, connections, values)
         values[component] = ~ values[source]
     elif len(command) == 3:
         # binary operator on two sources
         source1, operator, source2 = command
         if source1 not in values:
-            evaluate(source1, connections, values)
+            eval_circuit(source1, connections, values)
         if source2 not in values:
-            evaluate(source2, connections, values)
+            eval_circuit(source2, connections, values)
         if operator == "AND":
             values[component] = values[source1] & values[source2]
         elif operator == "OR":
@@ -58,20 +58,20 @@ def evaluate(component, connections, values):
 
 def puzzle1(test = True):
     connections, values = read_file(test), dict()
-    evaluate('a', connections, values)
+    eval_circuit('a', connections, values)
     print(values['a'])
 
 
 def puzzle2(test = True):
     connections, values = read_file(test), dict()
-    evaluate('a', connections, values)
+    eval_circuit('a', connections, values)
     
     # give output signal of wire a to wire b
     connections['b'] = [values['a']]
     
     # reset circuit
     values = dict()
-    evaluate('a', connections, values)
+    eval_circuit('a', connections, values)
     print(values['a'])
 
 puzzle1(False)
